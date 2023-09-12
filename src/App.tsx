@@ -1,15 +1,20 @@
 import React from 'react'
 import './App.css'
 import { Color, getSims } from './getSims';
+import { SketchPicker } from 'react-color';
 
 function App() {
-  const [r1, setR1] = React.useState(0);
-  const [g1, setG1] = React.useState(0);
-  const [b1, setB1] = React.useState(0);
-  const [r2, setR2] = React.useState(0);
-  const [g2, setG2] = React.useState(0);
-  const [b2, setB2] = React.useState(0);
   const [sims, setSims] = React.useState<Color[]>([]);
+  const [color1, setColor1] = React.useState({
+    r: 0,
+    g: 0,
+    b: 0
+  });
+  const [color2, setColor2] = React.useState({
+    r: 0,
+    g: 0,
+    b: 0
+  });
 
   const toHex = (arg: number) => {
     const conv = arg.toString(16);
@@ -20,97 +25,100 @@ function App() {
     }
   }
 
-  React.useEffect(() => {
-    setSims(getSims([r1, g1, b1], [r2, g2, b2]));
-  }, [b1, b2, g1, g2, r1, r2])
+  function getIt(): void {
+    setSims(getSims(color1, color2));
+  }
 
   return (
     <>
-      <section
+      <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
+          gap: '20px',
           justifyContent: 'center',
-          alignItems: 'center',
-          gap: '1rem',
+          alignItems: 'center'
         }}
       >
-        <p style={{ padding: '0', margin: '0', fontWeight: 'bolder', fontSize: '2rem' }}>COLOR 1</p>
-        <div style={{
-          minWidth: '3rem',
-          minHeight: '3rem',
-          width: 'auto',
-          backgroundColor: `rgb(${r1}, ${g1}, ${b1})`
-        }}>{`#${toHex(r1)}${toHex(g1)}${toHex(b1)}`}</div>
-        <label htmlFor="r1">
-          {r1}
-          <input id="r1" type='range' max={255} min={0} value={r1} onChange={(e) => {
-            setR1(parseInt(e.target.value));
-          }} />
-        </label>
-        <label htmlFor="g1">
-          {g1}
-          <input id="g1" type='range' max={255} min={0} value={g1} onChange={(e) => {
-            setG1(parseInt(e.target.value));
-          }} />
-        </label>
-        <label htmlFor="b1">
-          {b1}
-          <input id="b1" type='range' max={255} min={0} value={b1} onChange={(e) => {
-            setB1(parseInt(e.target.value));
-          }} />
-        </label>
-      </section>
-      <section
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '1rem',
-        }}
-      >
-        <p style={{ padding: '0', margin: '0', fontWeight: 'bolder', fontSize: '2rem' }}>COLOR 2</p>
-        <div style={{
-          minWidth: '3rem',
-          minHeight: '3rem',
-          width: 'auto',
-          backgroundColor: `rgb(${r2}, ${g2}, ${b2})`
-        }}>{`#${toHex(r2)}${toHex(g2)}${toHex(b2)}`}</div>
-        <label htmlFor="r2">
-          {r2}
-          <input id="r2" type='range' max={255} min={0} value={r2} onChange={(e) => {
-            setR2(parseInt(e.target.value));
-          }} />
-        </label>
-        <label htmlFor="g2">
-          {g2}
-          <input id="g2" type='range' max={255} min={0} value={g2} onChange={(e) => {
-            setG2(parseInt(e.target.value));
-          }} />
-        </label>
-        <label htmlFor="b2">
-          {b2}
-          <input id="b2" type='range' max={255} min={0} value={b2} onChange={(e) => {
-            setB2(parseInt(e.target.value));
-          }} />
-        </label>
-      </section>
-      <section>
-        {sims && sims.map((color) => {
-          const [R, G, B] = color
-          return (
+        <div>
+          <section
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '1rem',
+            }}
+          >
+            <p style={{ padding: '0', margin: '0', fontWeight: 'bolder', fontSize: '2rem' }}>COLOR 1</p>
             <div
-              key={`color-${R}${G}${B}`}
               style={{
                 minWidth: '3rem',
                 minHeight: '3rem',
-                width: 'auto',
-                backgroundColor: `rgb(${R}, ${G}, ${B})`
-              }}>{`#${toHex(R)}${toHex(G)}${toHex(B)}`}</div>
-          )
-        })}
-      </section>
+                width: '8rem',
+                backgroundColor: `rgb(${color1.r}, ${color1.g}, ${color1.b})`
+              }}
+            >
+              {`#${toHex(color1.r)}${toHex(color1.g)}${toHex(color1.b)}`}
+            </div>
+            <SketchPicker 
+              color={color1}
+              onChange={(color) => {
+                setColor1(color.rgb)
+              }}
+            />
+          </section>
+          <section
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '1rem',
+            }}
+          >
+            <p style={{ padding: '0', margin: '0', fontWeight: 'bolder', fontSize: '2rem' }}>COLOR 1</p>
+            <div
+              style={{
+                minWidth: '3rem',
+                minHeight: '3rem',
+                width: '8rem',
+                backgroundColor: `rgb(${color2.r}, ${color2.g}, ${color2.b})`
+              }}
+            >
+              {`#${toHex(color2.r)}${toHex(color2.g)}${toHex(color2.b)}`}
+            </div>
+            <SketchPicker 
+              color={color2}
+              onChange={(color) => {
+                setColor2(color.rgb)
+              }}
+            />
+          </section>
+          <button style={{ border: '1px black solid' }} onClick={getIt}><p>GET IT!</p></button>
+        </div>
+        <section
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            width: '8rem'
+          }}
+        >
+          {sims?.map((color) => {
+            const {r, g, b} = color
+            return (
+              <div
+                key={`color-${r}${g}${b}`}
+                style={{
+                  minWidth: '3rem',
+                  minHeight: '3rem',
+                  width: 'auto',
+                  backgroundColor: `rgb(${r}, ${g}, ${b})`
+                }}><p>{`#${toHex(r)}${toHex(g)}${toHex(b)}`}</p></div>
+            )
+          })}
+        </section>
+      </div>
     </>
   )
 }
