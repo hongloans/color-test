@@ -3,8 +3,14 @@ export type Color = {
   g: number,
   b: number
 }
-export function getSims(c1: Color, c2: Color) {
-  const diffs = [0.2, 0.4, 0.6, 0.8];
+export function getSims(c1: Color, c2: Color, diff: number) {
+  const diffs = [];
+  const adiff = 1 / diff;
+  let t = 1;
+  while (t*adiff < 1) {
+    diffs.push(t * adiff);
+    t ++;
+  }
   const result: Color[] = [];
 
   diffs.forEach(d => {
